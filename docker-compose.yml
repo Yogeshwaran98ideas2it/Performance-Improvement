@@ -1,0 +1,134 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: healthcare-postgres
+    environment:
+      POSTGRES_DB: healthcare
+      POSTGRES_USER: healthcare_app
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-change-me}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U healthcare_app"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - healthcare-network
+
+  healthcare-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: healthcare-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/healthcare
+      SPRING_DATASOURCE_USERNAME: healthcare_app
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-change-me}
+      SPRING_PROFILES_ACTIVE: prod
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+      LOGSTASH_HOST: logstash
+      LOGSTASH_PORT: 5000
+    ports:
+      - "8080:8080"
+    volumes:
+      - document_storage:/var/healthcare/documents
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - healthcare-network
+    restart: unless-stopped
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    container_name: healthcare-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    networks:
+      - healthcare-network
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.11.0
+    container_name: healthcare-logstash
+    depends_on:
+      - elasticsearch
+    volumes:
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./logstash/pipeline/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+    ports:
+      - "5000:5000/tcp"
+      - "5000:5000/udp"
+      - "9600:9600"
+    environment:
+      - "LS_JAVA_OPTS=-Xmx256m -Xms256m"
+    networks:
+      - healthcare-network
+    restart: unless-stopped
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.11.0
+    container_name: healthcare-kibana
+    depends_on:
+      - elasticsearch
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - SERVER_NAME=kibana
+      - SERVER_HOST=0.0.0.0
+    ports:
+      - "5601:5601"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5601/api/status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+    networks:
+      - healthcare-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+  elasticsearch_data:
+    driver: local
+  document_storage:
+    driver: local
+
+networks:
+  healthcare-network:
+    driver: bridge
+
+

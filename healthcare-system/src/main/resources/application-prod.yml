@@ -1,0 +1,52 @@
+spring:
+  datasource:
+    url: ${DATASOURCE_URL:jdbc:postgresql://postgres:5432/healthcare}
+    username: ${DATASOURCE_USERNAME:healthcare_app}
+    password: ${DATASOURCE_PASSWORD}
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: when-authorized
+
+logging:
+  level:
+    root: INFO
+    com.acme.healthcare: INFO
+  config: classpath:logback-spring.xml
+
+security:
+  jwt:
+    secret: ${JWT_SECRET}
+    access-token-ttl-minutes: 30
+    refresh-token-ttl-hours: 12
+
+storage:
+  documents:
+    root: ${DOCUMENT_ROOT:/var/healthcare/documents}
+
+multitenant:
+  enabled: true
+  resolution:
+    host-enabled: true
+    header-enabled: true
+    header-name: X-Tenant-Id
+
+
