@@ -23,7 +23,6 @@ public class RolePermissionMapper {
         }
         RolePermission entity = new RolePermission();
         entity.setCode(request.getCode());
-        entity.setDescription(request.getDescription());
         return entity;
     }
 
@@ -40,7 +39,7 @@ public class RolePermissionMapper {
         RolePermissionResponse response = new RolePermissionResponse();
         response.setId(entity.getId());
         response.setCode(entity.getCode());
-        response.setDescription(entity.getDescription());
+        response.setDescription(null); // Description not in database
         return response;
     }
 
@@ -55,7 +54,6 @@ public class RolePermissionMapper {
             return;
         }
         entity.setCode(request.getCode());
-        entity.setDescription(request.getDescription());
     }
 }
 

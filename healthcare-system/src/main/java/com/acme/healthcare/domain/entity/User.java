@@ -55,13 +55,10 @@ public class User extends AuditableEntity {
     @Column(name = "last_name", length = 80)
     private String lastName;
 
-    @Column(name = "phone_number", length = 40)
+    @Column(name = "phone", length = 20)
     private String phoneNumber;
 
-    @Column(name = "job_title", length = 120)
-    private String jobTitle;
-
-    @Column(name = "active")
+    @Column(name = "is_active")
     private boolean active = true;
 
     @Column(name = "date_of_birth")
@@ -71,8 +68,8 @@ public class User extends AuditableEntity {
     @Column(name = "gender", length = 20)
     private UserGender gender;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_role_map",
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "users_roles",
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();

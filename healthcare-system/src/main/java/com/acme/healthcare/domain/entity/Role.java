@@ -12,9 +12,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
@@ -47,10 +45,7 @@ public class Role extends AuditableEntity {
     @Column(name = "description", length = 255)
     private String description;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
-    @JoinTable(name = "role_permission_map",
-        joinColumns = @JoinColumn(name = "role_id"),
-        inverseJoinColumns = @JoinColumn(name = "permission_id"))
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "role")
     private Set<RolePermission> permissions = new HashSet<>();
 }
 

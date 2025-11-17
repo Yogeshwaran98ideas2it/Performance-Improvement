@@ -38,7 +38,6 @@ public class UserMapper {
         response.setFirstName(user.getFirstName());
         response.setLastName(user.getLastName());
         response.setPhoneNumber(user.getPhoneNumber());
-        response.setJobTitle(user.getJobTitle());
         response.setActive(user.isActive());
         response.setDateOfBirth(user.getDateOfBirth());
         response.setGender(user.getGender());

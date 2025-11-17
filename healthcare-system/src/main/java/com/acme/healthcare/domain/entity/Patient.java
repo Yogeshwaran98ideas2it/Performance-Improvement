@@ -57,17 +57,14 @@ public class Patient extends AuditableEntity {
     @Column(name = "gender", length = 20)
     private UserGender gender;
 
-    @Column(name = "primary_phone", length = 40)
+    @Column(name = "phone", length = 20)
     private String primaryPhone;
 
     @Column(name = "email", length = 120)
     private String email;
 
-    @Column(name = "address_line1", length = 150)
+    @Column(name = "address", columnDefinition = "TEXT")
     private String addressLine1;
-
-    @Column(name = "address_line2", length = 150)
-    private String addressLine2;
 
     @Column(name = "city", length = 80)
     private String city;
@@ -75,7 +72,7 @@ public class Patient extends AuditableEntity {
     @Column(name = "state", length = 80)
     private String state;
 
-    @Column(name = "postal_code", length = 20)
+    @Column(name = "zip_code", length = 20)
     private String postalCode;
 
     @Column(name = "country", length = 80)

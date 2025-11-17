@@ -35,7 +35,7 @@ public class PatientMapper {
         response.setPrimaryPhone(patient.getPrimaryPhone());
         response.setEmail(patient.getEmail());
         response.setAddressLine1(patient.getAddressLine1());
-        response.setAddressLine2(patient.getAddressLine2());
+        response.setAddressLine2(null); // addressLine2 not in database schema
         response.setCity(patient.getCity());
         response.setState(patient.getState());
         response.setPostalCode(patient.getPostalCode());
@@ -76,8 +76,12 @@ public class PatientMapper {
         entity.setGender(request.getGender());
         entity.setPrimaryPhone(request.getPrimaryPhone());
         entity.setEmail(request.getEmail());
-        entity.setAddressLine1(request.getAddressLine1());
-        entity.setAddressLine2(request.getAddressLine2());
+        // Combine addressLine1 and addressLine2 into single address field
+        String address = request.getAddressLine1();
+        if (request.getAddressLine2() != null && !request.getAddressLine2().isEmpty()) {
+            address = (address != null ? address + " " : "") + request.getAddressLine2();
+        }
+        entity.setAddressLine1(address);
         entity.setCity(request.getCity());
         entity.setState(request.getState());
         entity.setPostalCode(request.getPostalCode());
