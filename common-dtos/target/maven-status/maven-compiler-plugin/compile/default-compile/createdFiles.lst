@@ -1,0 +1,14 @@
+com/acme/healthcare/common/dto/AuditRecordResponse$AuditRecordResponseBuilder.class
+com/acme/healthcare/common/dto/AuditEventDto$AuditEventDtoBuilder.class
+com/acme/healthcare/common/dto/PagedResponseDto.class
+com/acme/healthcare/common/dto/UserSummaryDto.class
+com/acme/healthcare/common/dto/LoginRequest.class
+com/acme/healthcare/common/dto/PagedResponseDto$PagedResponseDtoBuilder.class
+com/acme/healthcare/common/dto/AuditEventDto.class
+com/acme/healthcare/common/dto/AuditRecordResponse.class
+com/acme/healthcare/common/dto/UserSummaryDto$UserSummaryDtoBuilder.class
+com/acme/healthcare/common/dto/TokenResponse$TokenResponseBuilder.class
+com/acme/healthcare/common/dto/ErrorResponseDto.class
+com/acme/healthcare/common/dto/TokenResponse.class
+com/acme/healthcare/common/dto/ErrorResponseDto$ErrorResponseDtoBuilder.class
+com/acme/healthcare/common/dto/RefreshTokenRequest.class

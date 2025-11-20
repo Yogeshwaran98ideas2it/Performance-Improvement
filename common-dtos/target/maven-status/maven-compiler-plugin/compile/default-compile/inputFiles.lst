@@ -1,0 +1,8 @@
+/home/ubuntu/Downloads/PIP/common-dtos/src/main/java/com/acme/healthcare/common/dto/ErrorResponseDto.java
+/home/ubuntu/Downloads/PIP/common-dtos/src/main/java/com/acme/healthcare/common/dto/AuditEventDto.java
+/home/ubuntu/Downloads/PIP/common-dtos/src/main/java/com/acme/healthcare/common/dto/TokenResponse.java
+/home/ubuntu/Downloads/PIP/common-dtos/src/main/java/com/acme/healthcare/common/dto/AuditRecordResponse.java
+/home/ubuntu/Downloads/PIP/common-dtos/src/main/java/com/acme/healthcare/common/dto/LoginRequest.java
+/home/ubuntu/Downloads/PIP/common-dtos/src/main/java/com/acme/healthcare/common/dto/RefreshTokenRequest.java
+/home/ubuntu/Downloads/PIP/common-dtos/src/main/java/com/acme/healthcare/common/dto/UserSummaryDto.java
+/home/ubuntu/Downloads/PIP/common-dtos/src/main/java/com/acme/healthcare/common/dto/PagedResponseDto.java
