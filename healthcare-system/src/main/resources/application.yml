@@ -58,7 +58,7 @@ server:
   port: 8080
 
 multitenant:
-  enabled: true
+  enabled: false
   resolution:
     host-enabled: true
     header-enabled: true

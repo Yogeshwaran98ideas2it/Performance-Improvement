@@ -1,7 +1,10 @@
 package com.acme.healthcare.service.impl;
 
+import com.acme.healthcare.domain.entity.Role;
 import com.acme.healthcare.domain.entity.RolePermission;
+import com.acme.healthcare.domain.enums.RoleType;
 import com.acme.healthcare.domain.repository.RolePermissionRepository;
+import com.acme.healthcare.domain.repository.RoleRepository;
 import com.acme.healthcare.mapper.RolePermissionMapper;
 import com.acme.healthcare.service.RolePermissionService;
 import com.acme.healthcare.service.dto.RolePermissionRequest;
@@ -21,17 +24,21 @@ public class RolePermissionServiceImpl implements RolePermissionService {
 
     private final RolePermissionRepository repository;
     private final RolePermissionMapper mapper;
+    private final RoleRepository roleRepository;
 
     /**
      * Creates a new instance.
      *
      * @param repository the repository
      * @param mapper the mapper
+     * @param roleRepository the role repository
      */
     public RolePermissionServiceImpl(final RolePermissionRepository repository,
-                                     final RolePermissionMapper mapper) {
+                                     final RolePermissionMapper mapper,
+                                     final RoleRepository roleRepository) {
         this.repository = repository;
         this.mapper = mapper;
+        this.roleRepository = roleRepository;
     }
 
     /**
@@ -40,6 +47,26 @@ public class RolePermissionServiceImpl implements RolePermissionService {
     @Override
     public RolePermissionResponse create(final RolePermissionRequest request) {
         RolePermission entity = mapper.toEntity(request);
+        
+        // Parse code to extract resource and action (e.g., "PATIENT_READ" -> resource="PATIENT", action="READ")
+        String code = request.getCode();
+        String[] parts = code.split("_", 2);
+        String resource = parts.length > 0 ? parts[0] : code;
+        String action = parts.length > 1 ? parts[1] : "READ";
+        
+        entity.setResource(resource);
+        entity.setAction(action);
+        
+        // Find or create a default ADMIN role for standalone permissions
+        Role defaultRole = roleRepository.findByName(RoleType.ADMIN)
+            .orElseGet(() -> {
+                Role role = new Role();
+                role.setName(RoleType.ADMIN);
+                role.setDescription("Default admin role for system permissions");
+                return roleRepository.save(role);
+            });
+        entity.setRole(defaultRole);
+        
         return mapper.toResponse(repository.save(entity));
     }
 
@@ -85,6 +112,7 @@ public class RolePermissionServiceImpl implements RolePermissionService {
         return repository.findAll(pageable).map(mapper::toResponse);
     }
 }
+
 
 
 

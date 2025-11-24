@@ -1,16 +1,22 @@
 spring:
   datasource:
-    url: ${DATASOURCE_URL:jdbc:postgresql://postgres:5432/healthcare}
-    username: ${DATASOURCE_USERNAME:healthcare_app}
-    password: ${DATASOURCE_PASSWORD}
+    url: ${SPRING_DATASOURCE_URL:${DATASOURCE_URL:jdbc:postgresql://10.88.0.2:5432/healthcare}}
+    username: ${SPRING_DATASOURCE_USERNAME:${DATASOURCE_USERNAME:healthcare_app}}
+    password: ${SPRING_DATASOURCE_PASSWORD:${DATASOURCE_PASSWORD:change-me}}
     hikari:
       maximum-pool-size: 20
       minimum-idle: 5
       connection-timeout: 30000
+      auto-commit: false
   jpa:
     hibernate:
-      ddl-auto: validate
-    show-sql: false
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        connection:
+          provider_disables_autocommit: true
   flyway:
     enabled: true
     locations: classpath:db/migration
@@ -30,11 +36,17 @@ logging:
   level:
     root: INFO
     com.acme.healthcare: INFO
+    com.zaxxer.hikari: DEBUG
+    org.springframework.jdbc: DEBUG
+    org.postgresql: DEBUG
+    org.hibernate: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.transaction: DEBUG
   config: classpath:logback-spring.xml
 
 security:
   jwt:
-    secret: ${JWT_SECRET}
+    secret: ${JWT_SECRET:change-this-secret-to-a-secure-value-in-production}
     access-token-ttl-minutes: 30
     refresh-token-ttl-hours: 12
 
@@ -43,10 +55,13 @@ storage:
     root: ${DOCUMENT_ROOT:/var/healthcare/documents}
 
 multitenant:
-  enabled: true
+  enabled: false
   resolution:
     host-enabled: true
     header-enabled: true
     header-name: X-Tenant-Id
+
+
+
 
 

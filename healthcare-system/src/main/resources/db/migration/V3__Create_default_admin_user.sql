@@ -1,6 +1,7 @@
 -- Create default admin user
--- Password: admin123 (BCrypt hash - should be changed in production)
+-- Password: SecureAdmin@2025! (BCrypt hash - CHANGE THIS IN PRODUCTION)
 -- This migration creates an initial admin user for system access
+-- IMPORTANT: Change this password immediately after first login in production
 
 INSERT INTO users (
     username, 
@@ -16,7 +17,7 @@ INSERT INTO users (
     version
 ) VALUES (
     'admin',
-    '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iwy8pQ5O', -- admin123
+    '$2a$10$BBS71Lx/0z2vo/pAedi0XuwwgixEAid5OL7xQs5DzO5SSJJZ1ywS.', -- SecureAdmin@2025! (BCrypt hash)
     'admin@healthcare.com',
     'System',
     'Administrator',
@@ -34,5 +35,11 @@ SELECT u.id, r.id
 FROM users u, roles r
 WHERE u.username = 'admin' AND r.name = 'ADMIN'
 ON CONFLICT DO NOTHING;
+
+
+
+
+
+
 
 

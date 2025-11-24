@@ -1,5 +1,5 @@
 # Stage 1: Build the application
-FROM docker.io/library/maven:3.9.6-eclipse-temurin-17 AS build
+FROM docker.io/library/maven:3.9.6-eclipse-temurin-21 AS build
 
 WORKDIR /workspace
 
@@ -24,15 +24,15 @@ COPY . .
 RUN mvn -pl healthcare-system -am clean package -DskipTests -P '!contract-tests' -B
 
 # Stage 2: Create runtime image
-FROM docker.io/library/eclipse-temurin:17-jre-alpine
+FROM docker.io/library/eclipse-temurin:21-jre-alpine
 
 WORKDIR /app
 
 # Create non-root user
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
-# Copy built JAR from build stage
-COPY --from=build /workspace/healthcare-system/target/*.jar app.jar
+# Copy built JAR from build stage (use the Spring Boot executable JAR)
+COPY --from=build /workspace/healthcare-system/target/healthcare-system-*.jar app.jar
 
 # Create document storage directory with appropriate ownership and permissions
 RUN install -d -m 755 -o appuser -g appgroup /var/healthcare/documents

@@ -1,0 +1,47 @@
+spring:
+  datasource:
+    url: ${DATASOURCE_URL:jdbc:postgresql://postgres:5432/audit}
+    username: ${DATASOURCE_USERNAME:audit_app}
+    password: ${DATASOURCE_PASSWORD:change-me}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  rabbitmq:
+    host: ${RABBITMQ_HOST:rabbitmq}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER:http://discovery-server:8761/eureka/}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+
+logging:
+  config: classpath:logback-spring.xml
+
+messaging:
+  audit:
+    exchange: ${AUDIT_EXCHANGE:audit.events}
+    queue: ${AUDIT_QUEUE:audit-service.events}
+
+
+
+
+
+
+
+
+
+

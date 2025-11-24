@@ -1,0 +1,40 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+        hbm2ddl:
+          auto: create-drop
+  flyway:
+    enabled: false
+
+multitenant:
+  enabled: false
+
+security:
+  jwt:
+    secret: test-secret-key-for-testing-purposes-only-minimum-256-bits
+    access-token-ttl-minutes: 30
+    refresh-token-ttl-hours: 12
+
+logging:
+  level:
+    root: WARN
+    com.acme.healthcare: INFO
+
+storage:
+  documents:
+    root: ${java.io.tmpdir}/healthcare-docs-test
+
+

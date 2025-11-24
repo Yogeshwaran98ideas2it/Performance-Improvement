@@ -1,0 +1,34 @@
+spring:
+  main:
+    web-application-type: reactive
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER:http://discovery-server:8761/eureka/}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+
+logging:
+  config: classpath:logback-spring.xml
+
+security:
+  jwt:
+    issuer: api-gateway
+    secret: ${JWT_SECRET:change-me-gateway-secret}
+    access-token-ttl-minutes: 30
+    refresh-token-ttl-hours: 12
+
+
+
+
+
+
+
+
+
+

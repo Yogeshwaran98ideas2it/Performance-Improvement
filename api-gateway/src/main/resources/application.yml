@@ -1,0 +1,47 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/v1/users/**,/api/v1/auth/**,/internal/users/**
+        - id: patient-service
+          uri: lb://patient-service
+          predicates:
+            - Path=/api/v1/patients/**,/api/v1/user-patient-assignments/**
+        - id: visit-service
+          uri: lb://visit-service
+          predicates:
+            - Path=/api/v1/visits/**,/api/v1/visit-diagnoses/**,/api/v1/visit-allergies/**,/api/v1/visit-medications/**
+        - id: document-service
+          uri: lb://document-service
+          predicates:
+            - Path=/api/v1/documents/**
+        - id: audit-service
+          uri: lb://audit-service
+          predicates:
+            - Path=/api/v1/audit/**
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+
+security:
+  jwt:
+    issuer: api-gateway
+    access-token-ttl-minutes: 30
+    refresh-token-ttl-hours: 12
+    secret: change-me-gateway-secret
+

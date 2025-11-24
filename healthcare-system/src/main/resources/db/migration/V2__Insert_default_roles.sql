@@ -111,3 +111,11 @@ WHERE r.name = 'THERAPIST'
 ON CONFLICT (role_id, permission_name) DO NOTHING;
 
 
+
+
+
+
+
+
+
+
