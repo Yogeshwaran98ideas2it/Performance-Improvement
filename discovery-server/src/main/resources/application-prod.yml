@@ -1,0 +1,19 @@
+logging:
+  config: classpath:logback-spring.xml
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+
+
+
+
+
+
+
+
+
+
+
